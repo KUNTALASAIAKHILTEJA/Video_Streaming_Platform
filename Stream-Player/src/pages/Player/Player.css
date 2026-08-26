@@ -1,0 +1,133 @@
+.player-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: var(--text-color);
+}
+
+.back-to-show-btn {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.back-to-show-btn:hover {
+  color: var(--text-color);
+  transform: translateX(-4px);
+}
+
+.player-wrapper {
+  width: 100%;
+}
+
+.player-details-section {
+  background: var(--background-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 30px var(--shadow-color);
+  backdrop-filter: blur(10px);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.player-details-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.episode-indicator {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #e50914;
+  letter-spacing: 0.8px;
+}
+
+.player-episode-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.player-duration {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.player-episode-desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.player-page-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 20px;
+}
+
+.player-page-error h2 {
+  font-size: 24px;
+  color: #ff3b30;
+}
+
+.back-link {
+  color: var(--text-color);
+  text-decoration: underline;
+}
+
+/* Next Episodes Section */
+.next-episodes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.next-episodes-section h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.next-episodes-scroll-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 8px 4px 16px 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+.next-episodes-scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.next-episodes-scroll-container::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 10px;
+}
+
+.next-episodes-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+}
+
+.next-episodes-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(229, 9, 20, 0.6);
+}
