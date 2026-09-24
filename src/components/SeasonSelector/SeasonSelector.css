@@ -1,0 +1,66 @@
+.season-selector-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.season-selector-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.season-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 150px;
+}
+
+.season-select {
+  width: 100%;
+  padding: 1px 1px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color);
+  background: var(--background-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  appearance: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.season-select:hover {
+  background: var(--background-card-hover);
+  border-color: var(--border-color-hover);
+}
+
+.season-select:focus {
+  outline: none;
+  background: var(--background-card-hover);
+  border-color: #e50914;
+}
+
+.season-select option {
+  background: var(--option-bg);
+  color: var(--text-color);
+  padding: 12px;
+}
+
+.season-select-arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: #999;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.season-select:focus+.season-select-arrow {
+  color: #e50914;
+}
