@@ -1,0 +1,1346 @@
+openapi: 3.0.3
+info:
+  title: Video Streaming API
+  version: 1.0.0
+  description: Swagger API documentation for the Video Streaming backend service.
+paths:
+  /api/episodes/:
+    get:
+      operationId: episodes_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - episodes
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEpisodeList'
+          description: ''
+    post:
+      operationId: episodes_create
+      tags:
+      - episodes
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Episode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Episode'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Episode'
+          description: ''
+  /api/episodes/{id}/:
+    get:
+      operationId: episodes_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this episode.
+        required: true
+      tags:
+      - episodes
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Episode'
+          description: ''
+    put:
+      operationId: episodes_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this episode.
+        required: true
+      tags:
+      - episodes
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Episode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Episode'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Episode'
+          description: ''
+    patch:
+      operationId: episodes_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this episode.
+        required: true
+      tags:
+      - episodes
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEpisode'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEpisode'
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Episode'
+          description: ''
+    delete:
+      operationId: episodes_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this episode.
+        required: true
+      tags:
+      - episodes
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/genre/:
+    get:
+      operationId: genre_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - genre
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGenreList'
+          description: ''
+    post:
+      operationId: genre_create
+      tags:
+      - genre
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genre'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Genre'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Genre'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+          description: ''
+  /api/genre/{id}/:
+    get:
+      operationId: genre_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this genre.
+        required: true
+      tags:
+      - genre
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+          description: ''
+    put:
+      operationId: genre_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this genre.
+        required: true
+      tags:
+      - genre
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genre'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Genre'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Genre'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+          description: ''
+    patch:
+      operationId: genre_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this genre.
+        required: true
+      tags:
+      - genre
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGenre'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGenre'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGenre'
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+          description: ''
+    delete:
+      operationId: genre_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this genre.
+        required: true
+      tags:
+      - genre
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/seasons/:
+    get:
+      operationId: seasons_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - seasons
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSeasonList'
+          description: ''
+    post:
+      operationId: seasons_create
+      tags:
+      - seasons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Season'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Season'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Season'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Season'
+          description: ''
+  /api/seasons/{id}/:
+    get:
+      operationId: seasons_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this season.
+        required: true
+      tags:
+      - seasons
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Season'
+          description: ''
+    put:
+      operationId: seasons_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this season.
+        required: true
+      tags:
+      - seasons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Season'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Season'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Season'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Season'
+          description: ''
+    patch:
+      operationId: seasons_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this season.
+        required: true
+      tags:
+      - seasons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSeason'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSeason'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSeason'
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Season'
+          description: ''
+    delete:
+      operationId: seasons_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this season.
+        required: true
+      tags:
+      - seasons
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/series/:
+    get:
+      operationId: series_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - series
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSeriesList'
+          description: ''
+    post:
+      operationId: series_create
+      tags:
+      - series
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Series'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Series'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Series'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+          description: ''
+  /api/series/{id}/:
+    get:
+      operationId: series_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this series.
+        required: true
+      tags:
+      - series
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+          description: ''
+    put:
+      operationId: series_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this series.
+        required: true
+      tags:
+      - series
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Series'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Series'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Series'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+          description: ''
+    patch:
+      operationId: series_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this series.
+        required: true
+      tags:
+      - series
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSeries'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSeries'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSeries'
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Series'
+          description: ''
+    delete:
+      operationId: series_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this series.
+        required: true
+      tags:
+      - series
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/watchhistory/:
+    get:
+      operationId: watchhistory_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - watchhistory
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedWatchHistoryList'
+          description: ''
+    post:
+      operationId: watchhistory_create
+      tags:
+      - watchhistory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchHistory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WatchHistory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WatchHistory'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchHistory'
+          description: ''
+  /api/watchhistory/{id}/:
+    get:
+      operationId: watchhistory_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - watchhistory
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchHistory'
+          description: ''
+    put:
+      operationId: watchhistory_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - watchhistory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchHistory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WatchHistory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WatchHistory'
+        required: true
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchHistory'
+          description: ''
+    patch:
+      operationId: watchhistory_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - watchhistory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWatchHistory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWatchHistory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWatchHistory'
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchHistory'
+          description: ''
+    delete:
+      operationId: watchhistory_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - watchhistory
+      security:
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Episode:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        season:
+          type: integer
+        episode_number:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+        video_file:
+          type: string
+          format: uri
+          nullable: true
+        genre_ids:
+          type: array
+          items:
+            type: integer
+            writeOnly: true
+          writeOnly: true
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          readOnly: true
+        duration:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Duration in minutes
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - episode_number
+      - genres
+      - id
+      - season
+      - title
+      - updated_at
+    Genre:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          maxLength: 200
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+      required:
+      - id
+      - name
+      - slug
+    PaginatedEpisodeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Episode'
+    PaginatedGenreList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+    PaginatedSeasonList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Season'
+    PaginatedSeriesList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Series'
+    PaginatedWatchHistoryList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WatchHistory'
+    PatchedEpisode:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        season:
+          type: integer
+        episode_number:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+        video_file:
+          type: string
+          format: uri
+          nullable: true
+        genre_ids:
+          type: array
+          items:
+            type: integer
+            writeOnly: true
+          writeOnly: true
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          readOnly: true
+        duration:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          description: Duration in minutes
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedGenre:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          maxLength: 200
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+    PatchedSeason:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        series:
+          type: integer
+        season_number:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+        episode_count:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedSeries:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+        banner:
+          type: string
+          format: uri
+          nullable: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+        age_rating:
+          type: string
+          maxLength: 10
+        language: {}
+        country:
+          type: string
+          maxLength: 50
+        genre_ids:
+          type: array
+          items:
+            type: integer
+            writeOnly: true
+          writeOnly: true
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedWatchHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        episode:
+          type: integer
+        progress_seconds:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        completed:
+          type: boolean
+        last_watched_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    Season:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        series:
+          type: integer
+        season_number:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+        episode_count:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - episode_count
+      - id
+      - season_number
+      - series
+      - title
+      - updated_at
+    Series:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+        banner:
+          type: string
+          format: uri
+          nullable: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,1})?$
+        age_rating:
+          type: string
+          maxLength: 10
+        language: {}
+        country:
+          type: string
+          maxLength: 50
+        genre_ids:
+          type: array
+          items:
+            type: integer
+            writeOnly: true
+          writeOnly: true
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - genres
+      - id
+      - slug
+      - title
+      - updated_at
+    StatusEnum:
+      enum:
+      - ongoing
+      - completed
+      type: string
+      description: |-
+        * `ongoing` - Ongoing
+        * `completed` - Completed
+    WatchHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        episode:
+          type: integer
+        progress_seconds:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+        completed:
+          type: boolean
+        last_watched_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - episode
+      - id
+      - last_watched_at
+      - updated_at
+      - user
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

@@ -1,7 +1,8 @@
 from rest_framework import serializers
-from .models import Genre,Series,Season,Episode,WatchHistory
+from .models import Genre, Series, Season, Episode, WatchHistory, Comment, AuditLog
 
-###=====1.Gere Serializer=====###
+
+###=====1.Genre Serializer=====###
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
@@ -48,7 +49,30 @@ class EpisodeSerializer(serializers.ModelSerializer):
     
 ###=====5.WatchHistory Serializer=====###
 class WatchHistorySerializer(serializers.ModelSerializer):
+    user_username = serializers.ReadOnlyField(source='user.username')
+
     class Meta:
         model = WatchHistory 
-        fields = ['id','user','episode','progress_seconds','completed','last_watched_at','created_at','updated_at']  
-        read_only_fields =['id','created_at','updated_at']            
+        fields = ['id','user','user_username','episode','progress_seconds','completed','last_watched_at','created_at','updated_at']  
+        read_only_fields =['id','user','created_at','updated_at']            
+
+
+###=====6.Comment Serializer=====###
+class CommentSerializer(serializers.ModelSerializer):
+    user_username = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = Comment
+        fields = ['id','user','user_username','series','episode','text','created_at','updated_at']
+        read_only_fields = ['id','user','created_at','updated_at']
+
+
+###=====7.AuditLog Serializer=====###
+class AuditLogSerializer(serializers.ModelSerializer):
+    user_username = serializers.ReadOnlyField(source='user.username')
+
+    class Meta:
+        model = AuditLog
+        fields = ['id','user','user_username','action','model_name','object_id','details','ip_address','timestamp']
+        read_only_fields = ['id','timestamp']
+            

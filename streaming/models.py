@@ -85,8 +85,8 @@ class Episode(models.Model):
         ordering = ['episode_number']
         constraints = [models.UniqueConstraint(fields=['season','episode_number'], name='unique_season_episode_number' )]
         
-        def __str__(self):
-            return f"S{self.season.season_number}E{self.episode_number}: {self.title}"
+    def __str__(self):
+        return f"S{self.season.season_number}E{self.episode_number}: {self.title}"
         
         
 ###====== 5.WATCH_HISTORY MODEL ======###       
@@ -100,13 +100,55 @@ class WatchHistory(models.Model):
     last_watched_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["user", "episode"], name="unique_user_episode")
         ]
-        def __str__(self):
-            return f"{self.user.username} - {self.episode.title}"        
-        
+
+    def __str__(self):
+        return f"{self.user.username} - {self.episode.title}"        
+
+
+###====== 6.COMMENT MODEL ======###
+class Comment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments")
+    episode = models.ForeignKey(Episode, on_delete=models.CASCADE, related_name="comments", null=True, blank=True)
+    series = models.ForeignKey(Series, on_delete=models.CASCADE, related_name="comments", null=True, blank=True)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Comment by {self.user.username} - {self.text[:20]}"
+
+
+###====== 7.AUDIT_LOG MODEL ======###
+class AuditLog(models.Model):
+    ACTION_CHOICES = [
+        ("CREATE", "Create"),
+        ("UPDATE", "Update"),
+        ("DELETE", "Delete"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="audit_logs")
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES)
+    model_name = models.CharField(max_length=100)
+    object_id = models.CharField(max_length=100, blank=True, null=True)
+    details = models.TextField(blank=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-timestamp']
+
+    def __str__(self):
+        return f"[{self.action}] {self.model_name} by {self.user.username if self.user else 'System'} at {self.timestamp}"
+
+
 ####======for delete the media files also=====###  
 @receiver(post_delete,sender=Series)
 def delete_series_files(sender,instance, **kwargs):
@@ -128,4 +170,5 @@ def delete_episode_files(sender,instance, **kwargs):
         instance.thumbnail.delete(save=False)
         
     if instance.video_file:
-        instance.video_file.delete(save=False)         
+        instance.video_file.delete(save=False)
+         
