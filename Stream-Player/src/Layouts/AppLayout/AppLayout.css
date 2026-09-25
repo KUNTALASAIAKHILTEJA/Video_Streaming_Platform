@@ -1,0 +1,16 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--background-base);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+  padding: 32px;
+  margin-left: 240px;
+  box-sizing: border-box;
+}

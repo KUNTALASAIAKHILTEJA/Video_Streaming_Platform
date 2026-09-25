@@ -2,7 +2,6 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { useShows } from "../../contexts/ShowContext";
 import VideoPlayer from "../../components/VideoPlayer/VideoPlayer";
 import EpisodeCard from "../../components/EpisodeCard/EpisodeCard";
-import EpisodeComments from "../../components/EpisodeComments/EpisodeComments";
 import "./Player.css";
 
 export default function Player() {
@@ -19,7 +18,6 @@ export default function Player() {
   const episode = season?.episodes.find((e) => e.episodeNumber === Number(episodeId));
 
   const backTo = location.state?.from || "/";
-  const autoFullscreen = location.state?.autoFullscreen ?? false;
 
   if (!show || !season || !episode) {
     return (
@@ -32,7 +30,7 @@ export default function Player() {
     );
   }
 
-  // Next episodes
+  // 
   let nextEpisodes = season.episodes.filter(
     (e) => e.episodeNumber > episode.episodeNumber
   );    
@@ -49,16 +47,6 @@ export default function Player() {
     }
   }
 
-  const formatDuration = (duration: number) => {
-    if (!duration) return "";
-    if (duration > 60) {
-      const minutes = Math.floor(duration / 60);
-      const seconds = duration % 60;
-      return `${minutes}m ${seconds > 0 ? `${seconds}s` : ""}`;
-    }
-    return `${duration} mins`;
-  };
-
   return (
     <div className="player-page">
       <Link to={`/show/${show.id}`} state={{ from: backTo }} className="back-to-show-btn">
@@ -66,7 +54,7 @@ export default function Player() {
       </Link>
 
       <div className="player-wrapper">
-        <VideoPlayer videoUrl={episode.videoUrl} autoFullscreen={autoFullscreen} />
+        <VideoPlayer videoUrl={episode.videoUrl} />
       </div>
 
       <div className="player-details-section">
@@ -75,13 +63,8 @@ export default function Player() {
             Season {season.seasonNumber} • Episode {episode.episodeNumber}
           </p>
           <h1 className="player-episode-title">{episode.title}</h1>
-          {episode.duration ? (
-            <p className="player-duration">{formatDuration(episode.duration)}</p>
-          ) : null}
+          <p className="player-duration">{episode.duration}</p>
         </div>
-        {episode.description && (
-          <p className="player-episode-desc">{episode.description}</p>
-        )}
       </div>
 
       {nextEpisodes.length > 0 && (
@@ -94,20 +77,12 @@ export default function Player() {
                 episode={nextEp}
                 showId={show.id}
                 seasonNumber={nextSeasonNumber}
-                poster={show.poster}
                 state={{ from: backTo }}
               />
             ))}
           </div>
         </div>
       )}
-
-      {/* Episode Comments Section */}
-      <EpisodeComments
-        episodeId={episode.id}
-        seriesId={show.id}
-        episodeTitle={episode.title}
-      />
     </div>
   );
 }

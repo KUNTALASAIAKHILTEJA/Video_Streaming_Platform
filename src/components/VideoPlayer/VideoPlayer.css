@@ -225,17 +225,101 @@
   font-variant-numeric: tabular-nums;
 }
 
-.timeline-slider {
+/* Custom Precision Timeline Scrubber */
+.custom-timeline-container {
+  position: relative;
   width: 100%;
-  height: 6px;
-  accent-color: #e50914;
+  height: 24px;
+  display: flex;
+  align-items: center;
   cursor: pointer;
+  touch-action: none;
+  user-select: none;
+}
+
+.timeline-track-rail {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 4px;
+  overflow: visible;
   transition: height 0.15s ease;
 }
 
-.timeline-slider:hover {
+.custom-timeline-container:hover .timeline-track-rail,
+.custom-timeline-container.is-dragging .timeline-track-rail {
   height: 8px;
+}
+
+.timeline-track-buffered {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  pointer-events: none;
+  transition: width 0.2s linear;
+}
+
+.timeline-track-played {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: #e50914;
+  border-radius: 4px;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+.timeline-scrubber-handle {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: #ffffff;
+  border: 2px solid #e50914;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.custom-timeline-container:hover .timeline-scrubber-handle,
+.custom-timeline-container.is-dragging .timeline-scrubber-handle {
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.timeline-hover-tooltip {
+  position: absolute;
+  bottom: 24px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  animation: tooltipFadeIn 0.15s ease forwards;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 4px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 .volume-control-group {

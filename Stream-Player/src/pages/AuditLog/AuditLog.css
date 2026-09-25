@@ -1,0 +1,118 @@
+.audit-log-page {
+  min-height: 100vh;
+}
+
+.clear-logs-btn {
+  background: none;
+  border: 1px solid #ff3b30;
+  color: #ff3b30;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-logs-btn:hover {
+  background: #ff3b30;
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+}
+
+.empty-logs {
+  text-align: center;
+  padding: 60px 40px;
+  color: var(--text-muted);
+  font-size: 15px;
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 40px auto;
+  line-height: 1.6;
+}
+
+.logs-container {
+  background: var(--background-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px var(--shadow-color);
+  margin-top: 24px;
+}
+
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.logs-table th,
+.logs-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logs-table th {
+  background: var(--background-sidebar-hover);
+  color: var(--text-color);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.logs-table tr:last-child td {
+  border-bottom: none;
+}
+
+.logs-table tr:hover td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+[data-theme='light'] .logs-table tr:hover td {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+.log-timestamp {
+  color: var(--text-muted);
+  font-family: monospace;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.log-details {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* Badges */
+.log-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid transparent;
+  line-height: 1.2;
+}
+
+.badge-create {
+  background: rgba(52, 199, 89, 0.15);
+  color: #34c759;
+  border-color: rgba(52, 199, 89, 0.2);
+}
+
+.badge-update {
+  background: rgba(0, 122, 255, 0.15);
+  color: #007aff;
+  border-color: rgba(0, 122, 255, 0.2);
+}
+
+.badge-delete {
+  background: rgba(255, 59, 48, 0.15);
+  color: #ff3b30;
+  border-color: rgba(255, 59, 48, 0.2);
+}

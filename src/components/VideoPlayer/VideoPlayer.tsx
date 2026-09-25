@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import ReactPlayer from "react-player";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./VideoPlayer.css";
 
 interface VideoPlayerProps {
   videoUrl: string;
+  autoFullscreen?: boolean;
 }
 
 function formatTime(seconds: number): string {
@@ -13,10 +13,11 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
 }
 
-export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
-  const playerRef = useRef<any>(null);
+export default function VideoPlayer({ videoUrl, autoFullscreen = false }: VideoPlayerProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
   const controlsTimeoutRef = useRef<any>(null);
 
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -24,11 +25,34 @@ export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
   const [isDismissed, setIsDismissed] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [bufferedEnd, setBufferedEnd] = useState<number>(0);
   const [volume, setVolume] = useState<number>(1);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [showControls, setShowControls] = useState<boolean>(true);
 
+  // Dragging / Scrubbing state
+  const isDraggingRef = useRef<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [hoverTime, setHoverTime] = useState<number | null>(null);
+  const [hoverPos, setHoverPos] = useState<number>(0);
+
+  // Auto-hide control bar when playing and inactive
+  const resetControlsTimeout = useCallback(() => {
+    setShowControls(true);
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    if (isPlaying && !isDraggingRef.current) {
+      controlsTimeoutRef.current = setTimeout(() => {
+        setShowControls(false);
+      }, 3000);
+    }
+  }, [isPlaying]);
+
+  const handleMouseMove = () => {
+    resetControlsTimeout();
+  };
+
+  // IntersectionObserver for auto-minimizing on scroll
   useEffect(() => {
     const target = wrapperRef.current;
     if (!target) return;
@@ -50,7 +74,7 @@ export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
     return () => observer.disconnect();
   }, []);
 
-  // Listen for fullscreen change events
+  // Fullscreen change listener
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -59,49 +83,205 @@ export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
-  // Auto-hide control bar when playing and inactive
-  const resetControlsTimeout = () => {
-    setShowControls(true);
-    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
-    if (isPlaying) {
-      controlsTimeoutRef.current = setTimeout(() => {
-        setShowControls(false);
-      }, 3000);
+  // Auto-initiate fullscreen and playback when navigated from episode grid
+  useEffect(() => {
+    if (!autoFullscreen) return;
+
+    const requestFullscreenOnContainer = () => {
+      const container = containerRef.current;
+      if (container && !document.fullscreenElement) {
+        container.requestFullscreen?.().then(() => {
+          setIsFullscreen(true);
+        }).catch((err) => {
+          console.log("Auto-fullscreen waiting for user interaction:", err);
+        });
+      }
+    };
+
+    // Attempt immediately (React Router link click counts as user gesture)
+    requestFullscreenOnContainer();
+
+    // Also auto-play video
+    const video = videoRef.current;
+    if (video) {
+      video.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+
+    // Fallback: If browser deferred fullscreen request, trigger on first document click/keydown
+    const handleFirstInteraction = () => {
+      requestFullscreenOnContainer();
+      if (video && video.paused) {
+        video.play().then(() => setIsPlaying(true)).catch(() => {});
+      }
+      window.removeEventListener("click", handleFirstInteraction, true);
+      window.removeEventListener("keydown", handleFirstInteraction, true);
+    };
+
+    window.addEventListener("click", handleFirstInteraction, { capture: true, once: true });
+    window.addEventListener("keydown", handleFirstInteraction, { capture: true, once: true });
+
+    return () => {
+      window.removeEventListener("click", handleFirstInteraction, true);
+      window.removeEventListener("keydown", handleFirstInteraction, true);
+    };
+  }, [autoFullscreen, videoUrl]);
+
+  // Video event handlers
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (!isDraggingRef.current) {
+      setCurrentTime(video.currentTime);
+    }
+
+    // Update buffer progress
+    if (video.buffered.length > 0) {
+      try {
+        const end = video.buffered.end(video.buffered.length - 1);
+        setBufferedEnd(end);
+      } catch {}
     }
   };
 
-  const handleMouseMove = () => {
-    resetControlsTimeout();
+  const handleLoadedMetadata = () => {
+    const video = videoRef.current;
+    if (video && video.duration && !isNaN(video.duration)) {
+      setDuration(video.duration);
+    }
   };
 
   const togglePlay = () => {
-    setIsPlaying((prev) => !prev);
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused || video.ended) {
+      video.play().then(() => setIsPlaying(true)).catch(() => {});
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
     resetControlsTimeout();
   };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
     setVolume(val);
+    const video = videoRef.current;
+    if (video) {
+      video.volume = val;
+      video.muted = val === 0;
+    }
     setIsMuted(val === 0);
   };
 
   const toggleMute = () => {
-    setIsMuted((prev) => !prev);
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setIsMuted(video.muted);
   };
 
-  const handleSeekStart = () => {
-    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
-  };
+  // ─── Precision Seek & Play Logic ──────────────────────────────────────────
 
-  const handleSeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = parseFloat(e.target.value);
-    setCurrentTime(time);
-    if (playerRef.current) {
-      if (typeof playerRef.current.seekTo === "function") {
-        playerRef.current.seekTo(time, "seconds");
-      } else if (playerRef.current.currentTime !== undefined) {
-        playerRef.current.currentTime = time;
+  const performSeek = useCallback((time: number, autoPlay: boolean = true) => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const maxDuration = video.duration || duration || time;
+    const safeTime = Math.max(0, Math.min(time, maxDuration));
+
+    // Synchronously set video position and component state
+    video.currentTime = safeTime;
+    setCurrentTime(safeTime);
+
+    if (autoPlay) {
+      if (video.paused) {
+        video.play().then(() => setIsPlaying(true)).catch(() => {});
+      } else {
+        setIsPlaying(true);
       }
+    }
+  }, [duration]);
+
+  const getTimeFromClientX = useCallback((clientX: number): number => {
+    if (!timelineRef.current) return 0;
+    const rect = timelineRef.current.getBoundingClientRect();
+    const clickX = clientX - rect.left;
+    const fraction = Math.max(0, Math.min(1, clickX / rect.width));
+    const effectiveDuration = videoRef.current?.duration || duration || 0;
+    return fraction * effectiveDuration;
+  }, [duration]);
+
+  // Pointer Handlers for Timeline
+  const handleTimelinePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    isDraggingRef.current = true;
+    setIsDragging(true);
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {}
+
+    const targetTime = getTimeFromClientX(e.clientX);
+    performSeek(targetTime, true);
+  };
+
+  const handleTimelinePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const targetTime = getTimeFromClientX(e.clientX);
+
+    if (timelineRef.current) {
+      const rect = timelineRef.current.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const fraction = Math.max(0, Math.min(1, clickX / rect.width));
+      setHoverPos(fraction * 100);
+      setHoverTime(targetTime);
+    }
+
+    if (isDraggingRef.current) {
+      setCurrentTime(targetTime);
+      const video = videoRef.current;
+      if (video) {
+        video.currentTime = targetTime;
+      }
+    }
+  };
+
+  const handleTimelinePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isDraggingRef.current) {
+      const targetTime = getTimeFromClientX(e.clientX);
+      performSeek(targetTime, true);
+
+      setTimeout(() => {
+        isDraggingRef.current = false;
+        setIsDragging(false);
+      }, 100);
+
+      try {
+        (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+      } catch {}
+    }
+    resetControlsTimeout();
+  };
+
+  // Keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      performSeek(Math.max(0, currentTime - 5), true);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      performSeek(Math.min(duration, currentTime + 5), true);
+    } else if (e.key === " " || e.key === "Spacebar") {
+      e.preventDefault();
+      togglePlay();
+    } else if (e.key === "m" || e.key === "M") {
+      e.preventDefault();
+      toggleMute();
+    } else if (e.key === "f" || e.key === "F") {
+      e.preventDefault();
+      toggleFullscreen();
     }
   };
 
@@ -129,21 +309,25 @@ export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
   };
 
   const showMiniPlayer = isMinimized && !isDismissed && !isFullscreen;
+  const progressPercent = duration > 0 ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0;
+  const bufferedPercent = duration > 0 ? Math.min(100, Math.max(0, (bufferedEnd / duration) * 100)) : 0;
 
   return (
     <div className="video-player-wrapper" ref={wrapperRef}>
       <div
         ref={containerRef}
-        className={`video-player-container ${showMiniPlayer ? "minimized" : ""} ${
+        className={`video-player-container ${showMiniPlayer ? "is-minimized" : ""} ${
           isFullscreen ? "fullscreen" : ""
         }`}
         onMouseMove={handleMouseMove}
         onMouseLeave={() => isPlaying && setShowControls(false)}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
       >
         {/* Mini Player Header Bar */}
         {showMiniPlayer && (
-          <div className="mini-player-header">
-            <span className="mini-player-label">Now Playing (Mini Player)</span>
+          <div className="mini-player-bar">
+            <span className="mini-player-title">Now Playing (Mini Player)</span>
             <div className="mini-player-actions">
               <button
                 type="button"
@@ -165,37 +349,24 @@ export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
           </div>
         )}
 
-        {(() => {
-          const PlayerComponent = ReactPlayer as any;
-          return (
-            <PlayerComponent
-              ref={playerRef}
-              url={videoUrl}
-              src={videoUrl}
-              controls={false}
-              playing={isPlaying}
-              volume={volume}
-              muted={isMuted}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onProgress={(progress: any) => {
-                if (progress && typeof progress.playedSeconds === "number") {
-                  setCurrentTime(progress.playedSeconds);
-                }
-              }}
-              onDuration={(dur: number) => setDuration(dur)}
-              onLoadedMetadata={(e: any) => {
-                if (e?.target?.duration) setDuration(e.target.duration);
-              }}
-              width="100%"
-              height="100%"
-              className="react-player"
-              onClick={togglePlay}
-            />
-          );
-        })()}
+        {/* Direct HTML5 Video Player */}
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          className="react-player-native"
+          playsInline
+          preload="metadata"
+          onClick={togglePlay}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onDurationChange={handleLoadedMetadata}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+          style={{ width: "100%", height: "100%", objectFit: "contain", background: "#000" }}
+        />
 
-        {/* Center Play Button Overlay when paused */}
+        {/* Big Center Play Button Overlay when paused */}
         {!isPlaying && !showMiniPlayer && (
           <div className="big-play-overlay" onClick={togglePlay}>
             <button type="button" className="big-play-btn" aria-label="Play video">
@@ -221,19 +392,50 @@ export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
               </span>
             </div>
 
+            {/* Custom Precision Timeline Scrubber Bar */}
             <div className="controls-center">
-              <input
-                type="range"
-                className="timeline-slider"
-                min={0}
-                max={duration || 100}
-                step={0.1}
-                value={currentTime}
-                onMouseDown={handleSeekStart}
-                onTouchStart={handleSeekStart}
-                onChange={handleSeekChange}
-                title="Seek"
-              />
+              <div
+                ref={timelineRef}
+                className={`custom-timeline-container ${isDragging ? "is-dragging" : ""}`}
+                onPointerDown={handleTimelinePointerDown}
+                onPointerMove={handleTimelinePointerMove}
+                onPointerUp={handleTimelinePointerUp}
+                onPointerCancel={handleTimelinePointerUp}
+                onPointerLeave={() => setHoverTime(null)}
+                role="slider"
+                aria-valuemin={0}
+                aria-valuemax={duration || 100}
+                aria-valuenow={currentTime}
+                title="Tap or drag to seek"
+              >
+                {/* Hover Timestamp Tooltip */}
+                {hoverTime !== null && duration > 0 && (
+                  <div
+                    className="timeline-hover-tooltip"
+                    style={{ left: `${hoverPos}%` }}
+                  >
+                    {formatTime(hoverTime)}
+                  </div>
+                )}
+
+                <div className="timeline-track-rail">
+                  {/* Buffered Track Fill */}
+                  <div
+                    className="timeline-track-buffered"
+                    style={{ width: `${bufferedPercent}%` }}
+                  />
+                  {/* Played Track Fill */}
+                  <div
+                    className="timeline-track-played"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                  {/* Scrubber Knob Handle */}
+                  <div
+                    className="timeline-scrubber-handle"
+                    style={{ left: `${progressPercent}%` }}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="controls-right">

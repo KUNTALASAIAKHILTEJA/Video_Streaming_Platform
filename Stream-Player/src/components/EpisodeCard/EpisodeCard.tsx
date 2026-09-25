@@ -7,7 +7,6 @@ interface EpisodeCardProps {
   episode: Episode;
   showId: number;
   seasonNumber: number;
-  poster?: string;
   state?: any;
 }
 
@@ -15,16 +14,15 @@ export default function EpisodeCard({
   episode,
   showId,
   seasonNumber,
-  poster,
   state,
 }: EpisodeCardProps) {
-  // Use episode thumbnail if available, or show poster, or fallback to stockImage
-  const imageSrc = episode.thumbnail || poster || stockImage;
+  // Fallback to stockImage
+  const imageSrc = stockImage;
 
   return (
     <Link
       to={`/player/${showId}/${seasonNumber}/${episode.episodeNumber}`}
-      state={{ ...(state || {}), autoFullscreen: true }}
+      state={state}
       className="episode-card"
     >
       <div className="episode-card-thumbnail-wrapper">
@@ -32,14 +30,6 @@ export default function EpisodeCard({
           src={imageSrc}
           alt={episode.title}
           className="episode-card-thumbnail"
-          onError={(e) => {
-            const img = e.target as HTMLImageElement;
-            if (poster && img.src !== poster) {
-              img.src = poster;
-            } else if (img.src !== stockImage) {
-              img.src = stockImage;
-            }
-          }}
         />
         <div className="episode-card-play-overlay">
           <span className="episode-card-play-icon">▶</span>

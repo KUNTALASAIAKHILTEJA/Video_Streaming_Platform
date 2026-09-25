@@ -1,3 +1,4 @@
+<<<<<<< ours
 # Stream-Player Frontend Documentation
 
 A modern, responsive, and feature-rich Single Page Application (SPA) built with **React 19**, **TypeScript**, and **Vite**. It provides a sleek streaming interface with dynamic video playback, HLS/DASH streaming capabilities, season/episode navigation, dark/light theme switching, and strict Role-Based Access Control (RBAC).
@@ -169,3 +170,7 @@ npm run dev
 ```
 
 The application will be accessible at: `http://localhost:5173/`
+||||||| base
+=======
+# Video_Streaming_Platform
+>>>>>>> theirs

@@ -1,4 +1,4 @@
-import type { Show, Season, Episode, Genre } from "../types/media";
+import type { Show, Season, Episode, Genre, Comment } from "../types/media";
 import type { AuditLogEntry } from "../contexts/ShowContext";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
@@ -467,6 +467,52 @@ export const Api = {
 
   async deleteGenre(genreId: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/genre/${genreId}/`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok && response.status !== 204) {
+      const errorText = await response.text().catch(() => "Unknown error");
+      throw new Error(`API error (${response.status}): ${errorText}`);
+    }
+  },
+
+  // Comment APIs
+  async fetchComments(params?: { episodeId?: number; seriesId?: number }): Promise<Comment[]> {
+    let url = `${API_BASE_URL}/comments/`;
+    const queryParams = new URLSearchParams();
+    if (params?.episodeId !== undefined) {
+      queryParams.append("episode", String(params.episodeId));
+    }
+    if (params?.seriesId !== undefined) {
+      queryParams.append("series", String(params.seriesId));
+    }
+    const queryString = queryParams.toString();
+    if (queryString) {
+      url += `?${queryString}`;
+    }
+    return fetchAllPages<Comment>(url, getAuthHeaders());
+  },
+
+  async createComment(data: { episode?: number; series?: number; text: string }): Promise<Comment> {
+    const response = await fetch(`${API_BASE_URL}/comments/`, {
+      method: "POST",
+      headers: getJsonHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse<Comment>(response);
+  },
+
+  async updateComment(commentId: number, text: string): Promise<Comment> {
+    const response = await fetch(`${API_BASE_URL}/comments/${commentId}/`, {
+      method: "PATCH",
+      headers: getJsonHeaders(),
+      body: JSON.stringify({ text }),
+    });
+    return handleResponse<Comment>(response);
+  },
+
+  async deleteComment(commentId: number): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/comments/${commentId}/`, {
       method: "DELETE",
       headers: getAuthHeaders(),
     });

@@ -1,0 +1,81 @@
+:root {
+  --background-base: #0b0b0b;
+  --background-content: #0b0b0f;
+  --background-card: rgba(255, 255, 255, 0.03);
+  --background-card-hover: rgba(255, 255, 255, 0.06);
+  --background-sidebar: #111;
+  --background-sidebar-hover: #222;
+  --border-color: rgba(255, 255, 255, 0.05);
+  --border-color-hover: rgba(255, 255, 255, 0.15);
+  --text-color: #ffffff;
+  --text-muted: #999;
+  --text-muted-darker: #666;
+  --hero-overlay-gradient: linear-gradient(
+    90deg,
+    rgba(11, 11, 15, 0.98) 0%,
+    rgba(11, 11, 15, 0.8) 35%,
+    rgba(11, 11, 15, 0.35) 70%,
+    rgba(11, 11, 15, 0.1) 100%
+  );
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --shadow-color-hover: rgba(229, 9, 20, 0.15);
+  
+  --scrollbar-track: rgba(0, 0, 0, 0.1);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  --option-bg: #181818;
+  --watch-btn-bg: white;
+  --watch-btn-color: #0b0b0f;
+  --info-btn-bg: rgba(255, 255, 255, 0.12);
+  --info-btn-color: white;
+}
+
+[data-theme='light'] {
+  --background-base: #f5f5f7;
+  --background-content: #f5f5f7;
+  --background-card: #ffffff;
+  --background-card-hover: #eaeaea;
+  --background-sidebar: #ffffff;
+  --background-sidebar-hover: #f0f0f2;
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-color-hover: rgba(0, 0, 0, 0.15);
+  --text-color: #1d1d1f;
+  --text-muted: #666;
+  --text-muted-darker: #888;
+  --hero-overlay-gradient: linear-gradient(
+    90deg,
+    rgba(245, 245, 247, 0.98) 0%,
+    rgba(245, 245, 247, 0.8) 35%,
+    rgba(245, 245, 247, 0.35) 70%,
+    rgba(245, 245, 247, 0.1) 100%
+  );
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --shadow-color-hover: rgba(0, 0, 0, 0.15);
+  
+  --scrollbar-track: rgba(0, 0, 0, 0.05);
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --option-bg: #ffffff;
+  --watch-btn-bg: #1d1d1f;
+  --watch-btn-color: white;
+  --info-btn-bg: rgba(0, 0, 0, 0.08);
+  --info-btn-color: #1d1d1f;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  background: var(--background-base);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-color);
+} 

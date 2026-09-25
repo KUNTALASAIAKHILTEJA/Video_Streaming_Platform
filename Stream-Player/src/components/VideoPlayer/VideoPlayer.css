@@ -1,0 +1,21 @@
+.video-player-container {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px var(--shadow-color);
+  border: 1px solid var(--border-color);
+  position: relative;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-player-container:hover {
+  border-color: var(--border-color-hover);
+}
+
+.react-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+}

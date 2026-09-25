@@ -1,0 +1,884 @@
+.series-page {
+  min-height: 100vh;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+
+.add-series-btn {
+  background: #e50914;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+}
+
+.add-series-btn:hover {
+  background: #ff1f2d;
+  transform: translateY(-2px);
+}
+
+.empty-library {
+  text-align: center;
+  padding: 60px 40px;
+  color: var(--text-muted);
+  font-size: 16px;
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+/* Show Card Hover Actions Overlay */
+.show-card-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.show-card-actions-overlay {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 10;
+}
+
+.show-card-wrapper:hover .show-card-actions-overlay {
+  opacity: 1;
+}
+
+.action-btn {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.edit-btn {
+  background: rgba(0, 122, 255, 0.85);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
+}
+
+.edit-btn:hover {
+  background: rgb(0, 122, 255);
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background: rgba(229, 9, 20, 0.85);
+  color: white;
+  box-shadow: 0 4px 10px rgba(229, 9, 20, 0.3);
+}
+
+.delete-btn:hover {
+  background: rgb(229, 9, 20);
+  transform: scale(1.05);
+}
+
+/* Modals layout */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-backdrop.sub-modal {
+  z-index: 1100;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.modal-content {
+  background: var(--background-sidebar);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 20px 50px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--text-color);
+}
+
+.modal-content.episode-modal {
+  max-width: 480px;
+}
+
+.modal-header {
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--background-sidebar);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 1;
+}
+
+.close-modal-btn:hover {
+  color: var(--text-color);
+}
+
+/* Tabs */
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--background-card);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 14px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-btn.active {
+  color: var(--text-color);
+  border-bottom-color: #e50914;
+  background: var(--background-sidebar-hover);
+}
+
+/* Forms */
+.modal-form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px;
+  background: var(--background-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #e50914;
+  background: var(--background-card-hover);
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row > .form-group {
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn-primary {
+  background: #e50914;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #ff1f2d;
+}
+
+.btn-secondary {
+  background: var(--background-card-hover);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--border-color);
+}
+
+/* Seasons Manager inside Edit Modal */
+.seasons-manager {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+}
+
+.manager-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.add-season-btn {
+  background: var(--background-card-hover);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-season-btn:hover {
+  border-color: var(--border-color-hover);
+  background: var(--border-color);
+}
+
+.seasons-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.season-item {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--background-card);
+}
+
+.season-item-header {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--background-card-hover);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.season-item-header h5 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.season-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-ep-trigger-btn {
+  background: #007aff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-ep-trigger-btn:hover {
+  background: #0062cc;
+}
+
+.delete-season-btn {
+  background: none;
+  border: none;
+  color: #ff3b30;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-season-btn:hover {
+  text-decoration: underline;
+}
+
+/* Episode Lists */
+.episodes-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--background-sidebar);
+}
+
+.episode-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
+  gap: 10px;
+}
+
+.episode-item:last-child {
+  border-bottom: none;
+}
+
+.ep-badge {
+  background: var(--border-color);
+  color: var(--text-color);
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  border: 1px solid var(--border-color-hover);
+}
+
+.ep-title {
+  font-weight: 600;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ep-duration {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.episode-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.ep-action-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.ep-action-btn:hover {
+  background: var(--background-card-hover);
+}
+
+.no-items-message {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 20px;
+  margin: 0;
+}
+
+.no-items-message.mini {
+  padding: 12px;
+  font-size: 12px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Upload Interface Styling */
+.upload-container {
+  width: 100%;
+}
+
+.upload-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--border-color-hover);
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--background-card);
+}
+
+.upload-dropzone:hover {
+  border-color: #e50914;
+  background: var(--background-card-hover);
+}
+
+.upload-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+
+.upload-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.upload-progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 24px;
+  background: var(--background-card);
+}
+
+.upload-progress-container p {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.progress-bar-wrapper {
+  width: 100%;
+  height: 6px;
+  background: var(--border-color);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #e50914;
+  border-radius: 3px;
+  transition: width 0.1s ease;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+}
+
+.upload-preview-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color-hover);
+  background: var(--background-card);
+  padding: 6px;
+  gap: 8px;
+}
+
+.upload-preview-container.backdrop-preview-container {
+  width: 100%;
+  max-width: 340px;
+}
+
+.upload-preview-container.video-preview-container {
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  gap: 12px;
+}
+
+.upload-preview {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+}
+
+.upload-preview.backdrop-preview {
+  height: auto;
+  aspect-ratio: 16/9;
+}
+
+.preview-action-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.backdrop-preview-container .preview-action-row {
+  flex-direction: row;
+}
+
+.replace-upload-label {
+  background: #007aff;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  flex: 1;
+  transition: background-color 0.2s ease;
+}
+
+.replace-upload-label:hover {
+  background: #0062cc;
+}
+
+.remove-preview-btn {
+  background: none;
+  border: 1px solid #ff3b30;
+  color: #ff3b30;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.remove-preview-btn:hover {
+  background: #ff3b30;
+  color: white;
+}
+
+.video-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.video-action-buttons .replace-upload-label,
+.video-action-buttons .remove-preview-btn {
+  padding: 6px 12px;
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.video-file-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.video-icon {
+  font-size: 20px;
+}
+
+.video-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Inline Video Upload inside Season Manager */
+.inline-upload-section {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  padding-right: 12px;
+}
+
+.inline-upload-btn {
+  background: rgba(0, 122, 255, 0.15);
+  color: #007aff;
+  border: 1px solid rgba(0, 122, 255, 0.2);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.inline-upload-btn:hover {
+  background: #007aff;
+  color: white;
+  border-color: #007aff;
+}
+
+.inline-video-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.video-badge-success {
+  background: rgba(52, 199, 89, 0.15);
+  color: #34c759;
+  border: 1px solid rgba(52, 199, 89, 0.2);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.inline-replace-icon {
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  padding: 2px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.inline-replace-icon:hover {
+  color: var(--text-color);
+}
+
+.inline-upload-progress {
+  position: relative;
+  width: 110px;
+  height: 16px;
+  background: var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inline-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #007aff;
+  transition: width 0.1s ease;
+  z-index: 1;
+}
+
+.inline-progress-text {
+  position: relative;
+  font-size: 9px;
+  font-weight: 700;
+  color: white;
+  z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* GENRE CHIPS SELECTOR AND FORMS */
+
+.genre-selection-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.genre-badge-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.genre-badge-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-color);
+  transform: translateY(-1px);
+}
+
+.genre-badge-btn.selected {
+  background: #e50914;
+  border-color: #e50914;
+  color: white;
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+}
+
+.toggle-create-genre-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0;
+  margin-top: 4px;
+  display: inline-block;
+  transition: opacity 0.2s ease;
+}
+
+.toggle-create-genre-btn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.create-genre-inline-form {
+  margin-top: 16px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: slideDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.create-genre-inline-form h4 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.form-group.mini {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.form-group.mini label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.form-group.mini input,
+.form-group.mini textarea {
+  padding: 8px 12px;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: white;
+  width: 100%;
+}
+
+.register-genre-action-btn {
+  align-self: flex-start;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.register-genre-action-btn:hover:not(:disabled) {
+  background: #ff4d4d;
+}
+
+.register-genre-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
