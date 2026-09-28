@@ -8,3 +8,10 @@ drf-spectacular==0.30.0
 pillow==12.3.0
 sqlparse==0.6.0
 tzdata==2026.3
+gunicorn==23.0.0
+psycopg[binary]==3.2.6
+dj-database-url==2.3.0
+django-storages[s3]==1.14.4
+boto3==1.38.0
+whitenoise==6.9.0
+python-decouple==3.8

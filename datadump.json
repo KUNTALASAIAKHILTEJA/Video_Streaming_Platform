@@ -1,0 +1,250 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$cp7U8oFkMELPP7VK1FHPe0$FvZODG8rQCtEbDOi+7J+n+OeXaSKoTNQNtHTczI8LFA=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "admin@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-08-21T09:25:05.517Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$55cteAGjBtZIRqMotkDIED$Nj7W0kyWgW53ix2T2h9+fj27HFVdQoCrAweZj8m+tDI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "regular_user",
+    "first_name": "",
+    "last_name": "",
+    "email": "user@example.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-18T04:05:53.298Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "streaming.genre",
+  "pk": 1,
+  "fields": {
+    "name": "Thriller",
+    "slug": "thriller",
+    "description": "Suspense and thriller content"
+  }
+},
+{
+  "model": "streaming.genre",
+  "pk": 2,
+  "fields": {
+    "name": "Action",
+    "slug": "action",
+    "description": "Action and adventure content"
+  }
+},
+{
+  "model": "streaming.genre",
+  "pk": 3,
+  "fields": {
+    "name": "Drama",
+    "slug": "drama",
+    "description": "Dramatic stories and emotional content"
+  }
+},
+{
+  "model": "streaming.genre",
+  "pk": 4,
+  "fields": {
+    "name": "Romance",
+    "slug": "romance",
+    "description": "Romantic stories"
+  }
+},
+{
+  "model": "streaming.series",
+  "pk": 1,
+  "fields": {
+    "title": "Shadow Code",
+    "slug": "shadow-code",
+    "description": "A mystery thriller series",
+    "thumbnail": "series/thumbnails/rudra.jpg",
+    "banner": "series/banner/rudrabanner.jpg",
+    "status": "ongoing",
+    "rating": "9.1",
+    "age_rating": "16+",
+    "language": [
+      "Telugu"
+    ],
+    "country": "India",
+    "created_at": "2026-08-21T06:26:47.777Z",
+    "updated_at": "2026-08-21T06:29:38.021Z",
+    "genres": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "streaming.series",
+  "pk": 2,
+  "fields": {
+    "title": "Veera-The Last Warrior",
+    "slug": "veera-the-last-warrior",
+    "description": "A powerful warrior returns to protect his kingdom from an ancient enemy.",
+    "thumbnail": "series/thumbnails/veera_thumbnail.jpg",
+    "banner": "series/banner/veera_banner.jpg",
+    "status": "ongoing",
+    "rating": "8.9",
+    "age_rating": "13+",
+    "language": [
+      "Telugu",
+      "Hindi",
+      "English"
+    ],
+    "country": "India",
+    "created_at": "2026-08-21T10:37:46.526Z",
+    "updated_at": "2026-08-21T11:00:10.288Z",
+    "genres": [
+      1,
+      2,
+      3
+    ]
+  }
+},
+{
+  "model": "streaming.series",
+  "pk": 5,
+  "fields": {
+    "title": "Agni Veerudu",
+    "slug": "agni-veerudu",
+    "description": "A fearless young warrior rises against a powerful enemy to save his people.",
+    "thumbnail": "",
+    "banner": "",
+    "status": "ongoing",
+    "rating": "8.7",
+    "age_rating": "13+",
+    "language": [
+      "Telugu",
+      "English"
+    ],
+    "country": "India",
+    "created_at": "2026-08-24T06:17:22.463Z",
+    "updated_at": "2026-08-24T06:17:22.463Z",
+    "genres": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "streaming.series",
+  "pk": 6,
+  "fields": {
+    "title": "Naruto",
+    "slug": "naruto",
+    "description": "A fearless young warrior rises against a powerful enemy to save his people.",
+    "thumbnail": "series/thumbnails/rudra_83uH6eT.jpg",
+    "banner": "series/banner/rudrabanner_I6kQSKw.jpg",
+    "status": "ongoing",
+    "rating": "8.7",
+    "age_rating": "13+",
+    "language": [],
+    "country": "India",
+    "created_at": "2026-08-24T11:43:57.002Z",
+    "updated_at": "2026-08-24T11:43:57.003Z",
+    "genres": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "streaming.season",
+  "pk": 1,
+  "fields": {
+    "series": 2,
+    "season_number": 1,
+    "title": "The Beginning",
+    "description": "Veera returns to his hometown and discovers a hidden secret.",
+    "thumbnail": "seasons/thumbnail/season1_thumbnail_qkQgwVO.png",
+    "episode_count": 0,
+    "created_at": "2026-08-21T11:06:29.441Z",
+    "updated_at": "2026-08-24T04:06:15.461Z"
+  }
+},
+{
+  "model": "streaming.season",
+  "pk": 2,
+  "fields": {
+    "series": 6,
+    "season_number": 1,
+    "title": "Naruto-The warrior",
+    "description": "naruto war",
+    "thumbnail": "seasons/thumbnail/rudra.jpg",
+    "episode_count": 0,
+    "created_at": "2026-08-24T11:47:07.095Z",
+    "updated_at": "2026-08-24T11:47:07.095Z"
+  }
+},
+{
+  "model": "streaming.episode",
+  "pk": 1,
+  "fields": {
+    "season": 1,
+    "episode_number": 1,
+    "title": "The Intition",
+    "description": "Veera returns to his village after many years.",
+    "thumbnail": "episodes/thumbnails/S1E1.jpg",
+    "video_file": "episodes/videos/Scene_The_Fall_of_the_Kingd.mp4",
+    "duration": 45,
+    "created_at": "2026-08-24T04:26:23.298Z",
+    "updated_at": "2026-08-24T04:26:23.298Z",
+    "genres": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "streaming.episode",
+  "pk": 2,
+  "fields": {
+    "season": 1,
+    "episode_number": 2,
+    "title": "The Broken Hidden Secret",
+    "description": "Veera discovers an ancient secret about his family.",
+    "thumbnail": "episodes/thumbnails/S1E2.png",
+    "video_file": "episodes/videos/Scene_The_Fall_of_the_Kingd_idNwaE4.mp4",
+    "duration": 50,
+    "created_at": "2026-08-24T04:44:16.442Z",
+    "updated_at": "2026-08-24T04:44:16.442Z",
+    "genres": [
+      2,
+      3
+    ]
+  }
+},
+{
+  "model": "streaming.comment",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "regular_user"
+    ],
+    "episode": null,
+    "series": 1,
+    "text": "Amazing show!",
+    "created_at": "2026-09-18T04:28:21.143Z",
+    "updated_at": "2026-09-18T04:28:21.143Z"
+  }
+}
+]
