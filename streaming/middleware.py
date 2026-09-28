@@ -28,7 +28,7 @@ class JWTRBACMiddleware:
             if not is_admin:
                 return JsonResponse({'detail': 'Forbidden: Admin privileges required for write operations.'}, status=403)
 
-        # 3. Restrict Audit Logs exclusively to Admins
+        # 3. Audit Logs  to Admins
         if '/api/auditlog/' in path and not is_admin:
             return JsonResponse({'detail': 'Forbidden: Only admin users can view audit logs.'}, status=403)
 
