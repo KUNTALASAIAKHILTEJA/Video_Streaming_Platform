@@ -15,7 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY & ENVIRONMENT CONFIGURATION
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-58f-^8)&pg7ny$9!@l(%$9bi8k#o7)5k5g!&e_ffgqo0mtg)qc')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
+if '*' not in ALLOWED_HOSTS and '.onrender.com' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('.onrender.com')
 
 # Application definition
 INSTALLED_APPS = [
@@ -151,6 +153,7 @@ else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # CORS Configuration
+CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=True, cast=bool)
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
     default='http://localhost:5173,http://127.0.0.1:5173',
