@@ -27,6 +27,19 @@
   border-color: var(--border-color-hover);
 }
 
+.video-player-container:fullscreen,
+.video-player-container:-webkit-full-screen,
+.video-player-container.fullscreen {
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+  aspect-ratio: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Floating Minimized (Picture-in-Picture) Player */
 .video-player-container.is-minimized {
   position: fixed;
