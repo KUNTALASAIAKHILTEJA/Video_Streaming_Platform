@@ -17,11 +17,59 @@ class GenreViewset(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="CREATE",
+            model_name="Genre", object_id=str(instance.id),
+            details=f'Created Genre: "{instance.name}"'
+        )
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="UPDATE",
+            model_name="Genre", object_id=str(instance.id),
+            details=f'Updated Genre: "{instance.name}"'
+        )
+
+    def perform_destroy(self, instance):
+        AuditLog.objects.create(
+            user=self.request.user, action="DELETE",
+            model_name="Genre", object_id=str(instance.id),
+            details=f'Deleted Genre: "{instance.name}"'
+        )
+        instance.delete()
+
 
 class SeriesViewSet(viewsets.ModelViewSet):
     queryset = Series.objects.all()
     serializer_class = SeriesSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="CREATE",
+            model_name="Series", object_id=str(instance.id),
+            details=f'Created Series: "{instance.title}"'
+        )
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="UPDATE",
+            model_name="Series", object_id=str(instance.id),
+            details=f'Updated Series: "{instance.title}"'
+        )
+
+    def perform_destroy(self, instance):
+        AuditLog.objects.create(
+            user=self.request.user, action="DELETE",
+            model_name="Series", object_id=str(instance.id),
+            details=f'Deleted Series: "{instance.title}"'
+        )
+        instance.delete()
 
 
 class SeasonsViewset(viewsets.ModelViewSet):
@@ -29,12 +77,60 @@ class SeasonsViewset(viewsets.ModelViewSet):
     serializer_class = SeasonSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="CREATE",
+            model_name="Season", object_id=str(instance.id),
+            details=f'Created Season {instance.season_number} for "{instance.series.title}"'
+        )
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="UPDATE",
+            model_name="Season", object_id=str(instance.id),
+            details=f'Updated Season {instance.season_number} of "{instance.series.title}"'
+        )
+
+    def perform_destroy(self, instance):
+        AuditLog.objects.create(
+            user=self.request.user, action="DELETE",
+            model_name="Season", object_id=str(instance.id),
+            details=f'Deleted Season {instance.season_number} from "{instance.series.title}"'
+        )
+        instance.delete()
+
 
 class EpisodeViewset(viewsets.ModelViewSet):
     queryset = Episode.objects.all()
     serializer_class = EpisodeSerializer
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="CREATE",
+            model_name="Episode", object_id=str(instance.id),
+            details=f'Created Episode: "{instance.title}"'
+        )
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="UPDATE",
+            model_name="Episode", object_id=str(instance.id),
+            details=f'Updated Episode: "{instance.title}"'
+        )
+
+    def perform_destroy(self, instance):
+        AuditLog.objects.create(
+            user=self.request.user, action="DELETE",
+            model_name="Episode", object_id=str(instance.id),
+            details=f'Deleted Episode: "{instance.title}"'
+        )
+        instance.delete()
 
 
 # ==========================================

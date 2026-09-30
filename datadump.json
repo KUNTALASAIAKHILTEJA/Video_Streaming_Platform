@@ -34,6 +34,23 @@
   }
 },
 {
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$pOTpyqJVsuXaGCcu6Aa1SO$BLeTj6+Tk8LWOGvsycH0dI8PIaexvDb6xZnuFHI4Dmk=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "regular_user2",
+    "first_name": "",
+    "last_name": "",
+    "email": "user2@example.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-09-29T06:43:58.014Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
   "model": "streaming.genre",
   "pk": 1,
   "fields": {
@@ -67,6 +84,15 @@
     "name": "Romance",
     "slug": "romance",
     "description": "Romantic stories"
+  }
+},
+{
+  "model": "streaming.genre",
+  "pk": 5,
+  "fields": {
+    "name": "string",
+    "slug": "string",
+    "description": "string"
   }
 },
 {
