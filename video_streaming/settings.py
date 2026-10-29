@@ -119,10 +119,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Uploaded media goes to Cloudinary when CLOUDINARY_URL is set, else local disk
+USE_CLOUDINARY = bool(config('CLOUDINARY_URL', default=''))
 STORAGES = {
-    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'default': {
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
+        if USE_CLOUDINARY else 'django.core.files.storage.FileSystemStorage'
+    },
     'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'},
 }
+CLOUDINARY_STORAGE = {'CLOUDINARY_URL': config('CLOUDINARY_URL', default='')}
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Media Files (Local folder for development)

@@ -13,3 +13,5 @@ psycopg[binary]>=3.2,<4
 gunicorn>=23
 whitenoise>=6.8
 dj-database-url>=2.3
+cloudinary>=1.40
+django-cloudinary-storage>=0.3

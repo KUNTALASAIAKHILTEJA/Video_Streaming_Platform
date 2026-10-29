@@ -2,7 +2,15 @@ from django.db import models
 from django.conf import settings
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.core.files.storage import default_storage
 
+
+def video_storage():
+    """Cloudinary needs its video storage class for video files; local disk otherwise."""
+    if settings.USE_CLOUDINARY:
+        from cloudinary_storage.storage import VideoMediaCloudinaryStorage
+        return VideoMediaCloudinaryStorage()
+    return default_storage
 
 
 # Create your models here.
@@ -76,7 +84,7 @@ class Episode(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True) 
     thumbnail = models.ImageField(upload_to='episodes/thumbnails/',blank=True,null=True)
-    video_file = models.FileField(upload_to='episodes/videos/',blank=True,null=True)
+    video_file = models.FileField(upload_to='episodes/videos/',storage=video_storage,blank=True,null=True)
     duration = models.PositiveIntegerField(help_text="Duration in minutes", default=0)
     
     #Many to Many Relationship with Genre (EPISODE_GENRE table automatically)
