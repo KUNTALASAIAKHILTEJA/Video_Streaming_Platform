@@ -12,7 +12,7 @@ class GenreSerializer(serializers.ModelSerializer):
 ###=====2.Series Serializer=====###
 class SeriesSerializer(serializers.ModelSerializer):
     
-    genre_ids = serializers.PrimaryKeyRelatedField(source='genres',queryset = Genre.objects.all(),many=True,write_only=True,required=False)
+    genre_ids = serializers.PrimaryKeyRelatedField(source='genres',queryset = Genre.objects.all(),many=True,write_only=True,required=True)
     genres = GenreSerializer(many=True,read_only=True)
     
     class Meta:

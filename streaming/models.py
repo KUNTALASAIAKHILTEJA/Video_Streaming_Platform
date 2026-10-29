@@ -39,6 +39,9 @@ class Series(models.Model):
     genres = models.ManyToManyField(Genre,related_name='series',blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['title']
     
     def __str__(self):
         return self.title
@@ -102,6 +105,7 @@ class WatchHistory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        ordering = ['-last_watched_at']
         constraints = [
             models.UniqueConstraint(fields=["user", "episode"], name="unique_user_episode")
         ]
@@ -172,3 +176,4 @@ def delete_episode_files(sender,instance, **kwargs):
     if instance.video_file:
         instance.video_file.delete(save=False)
          
+    

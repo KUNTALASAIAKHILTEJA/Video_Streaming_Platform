@@ -1,3 +1,4 @@
+from django.http import request
 from rest_framework import viewsets, exceptions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -142,22 +143,17 @@ class WatchHistoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # Admins see all watch history; regular users see only their own
-        if self.request.user and self.request.user.is_staff:
+        if self.request.user.is_staff:
             return WatchHistory.objects.all()
         return WatchHistory.objects.filter(user=self.request.user)
 
-    def perform_create(self, serializer):
-        # Automatically attach logged-in user
-        serializer.save(user=self.request.user)
-
-
+        
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Comment.objects.all()
+        queryset = Comment.objects.all().select_related('user', 'series', 'episode')
         series_id = self.request.query_params.get('series')
         episode_id = self.request.query_params.get('episode')
 
@@ -168,18 +164,44 @@ class CommentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        # Auto-attach logged-in user
-        serializer.save(user=self.request.user)
+        # Admins cannot create comments
+        if self.request.user.is_staff:
+            raise exceptions.PermissionDenied("Admins are not allowed to create comments.")
+        
+        # Auto-attach regular user as comment owner
+        instance = serializer.save(user=self.request.user)
+        AuditLog.objects.create(
+            user=self.request.user, action="CREATE",
+            model_name="Comment", object_id=str(instance.id),
+            details=f'{self.request.user.username} commented: "{instance.text[:50]}"'
+        )
 
     def perform_update(self, serializer):
-        instance = self.get_object()
-        if not self.request.user.is_staff and instance.user != self.request.user:
+        # Admins cannot update comments
+        if self.request.user.is_staff:
+            raise exceptions.PermissionDenied("Admins are not allowed to edit comments.")
+        
+        instance = serializer.instance
+        if instance.user != self.request.user:
             raise exceptions.PermissionDenied("You can only edit your own comments.")
-        serializer.save()
+            
+        instance = serializer.save()
+        AuditLog.objects.create(
+            user=self.request.user, action="UPDATE",
+            model_name="Comment", object_id=str(instance.id),
+            details=f'{self.request.user.username} updated comment: "{instance.text[:50]}"'
+        )
 
     def perform_destroy(self, instance):
-        if not self.request.user.is_staff and instance.user != self.request.user:
+        # Admin can delete any comment and regular users can only delete their own
+        if instance.user != self.request.user and not self.request.user.is_staff:
             raise exceptions.PermissionDenied("You can only delete your own comments.")
+            
+        AuditLog.objects.create(
+            user=self.request.user, action="DELETE",
+            model_name="Comment", object_id=str(instance.id),
+            details=f'{self.request.user.username} deleted comment: "{instance.text[:50]}"'
+        )
         instance.delete()
 
 
@@ -188,11 +210,12 @@ class CommentViewSet(viewsets.ModelViewSet):
 # ==========================================
 
 class AuditLogViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = AuditLog.objects.all() 
     serializer_class = AuditLogSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        # Only admin/staff users can view system audit logs
-        if not (self.request.user and self.request.user.is_staff):
-            raise exceptions.PermissionDenied("Forbidden: Only admin users can view audit logs.")
-        return AuditLog.objects.all()
+    # def get_queryset(self):
+    #     # Only admin/staff users can view system audit logs
+    #     if not (self.request.user and self.request.user.is_staff):
+    #         raise exceptions.PermissionDenied("Forbidden: Only admin users can view audit logs.")
+    #     return AuditLog.objects.all()
